@@ -1,172 +1,74 @@
 <!DOCTYPE html>
-<html lang="en">
-<!-- Adapted to work with the getUserMedia API using code from http://wesbos.com/html5-video-face-detection-canvas-javascript/ -->
-        <head>
-                <meta charset="utf-8">
-                <title>HTML5 Face Detection - JavaScript getUserMedia API and Groucho Marx glasses!</title>
-                <style>
-body {
-        font-family: sans-serif;
-        font-size: 17px;
-        line-height: 24px;
-        color: #fff;
-        width: 100%;
-        height: 100%;
-        margin: 0;
-        text-align: center;
-        background-color: #111;
-}
+<html>
 
-#info {
-        position: absolute;
-        width: 100%;
-        height: 30px;
-        top: 50%;
-        margin-top: -15px;
-}
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Equinox123.github.io : " />
 
-#output {
-        width: auto;
-        height: 100%;
-        background: black;
-        -webkit-transform: scale(-1, 1);
-}
-                </style>
-        </head>
-        <body>
-                <p id="info">Please allow access to your camera!</p>
-                <canvas id="output"></canvas>
-                <script src="ccv.js"></script>
-                <script src="face.js"></script>
-                <script>
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
 
-// requestAnimationFrame shim
-(function() {
-        var i = 0,
-                lastTime = 0,
-                vendors = ['ms', 'moz', 'webkit', 'o'];
-        
-        while (i < vendors.length && !window.requestAnimationFrame) {
-                window.requestAnimationFrame = window[vendors[i] + 'RequestAnimationFrame'];
-                i++;
-        }
-        
-        if (!window.requestAnimationFrame) {
-                window.requestAnimationFrame = function(callback, element) {
-                        var currTime = new Date().getTime(),
-                                timeToCall = Math.max(0, 1000 / 60 - currTime + lastTime),
-                                id = setTimeout(function() { callback(currTime + timeToCall); }, timeToCall);
-                        
-                        lastTime = currTime + timeToCall;
-                        return id;
-                };
-        }
-}());
+    <title>Equinox123.github.io</title>
+  </head>
 
-var App = {
-        start: function(stream) {
-                App.video.addEventListener('canplay', function() {
-                        App.video.removeEventListener('canplay');
-                        setTimeout(function() {
-                                App.video.play();
-                                App.canvas.style.display = 'inline';
-                                App.info.style.display = 'none';
-                                App.canvas.width = App.video.videoWidth;
-                                App.canvas.height = App.video.videoHeight;
-                                App.backCanvas.width = App.video.videoWidth / 4;
-                                App.backCanvas.height = App.video.videoHeight / 4;
-                                App.backContext = App.backCanvas.getContext('2d');
-                        
-                                var w = 300 / 4 * 0.8,
-                                        h = 270 / 4 * 0.8;
-                        
-                                App.comp = [{
-                                        x: (App.video.videoWidth / 4 - w) / 2,
-                                        y: (App.video.videoHeight / 4 - h) / 2,
-                                        width: w, 
-                                        height: h,
-                                }];
-                        
-                                App.drawToCanvas();
-                        }, 500);
-                }, true);
-                
-                var domURL = window.URL || window.webkitURL;
-                App.video.src = domURL ? domURL.createObjectURL(stream) : stream;
-        },
-        denied: function() {
-                App.info.innerHTML = 'Camera access denied!<br>Please reload and try again.';
-        },
-        error: function(e) {
-                if (e) {
-                        console.error(e);
-                }
-                App.info.innerHTML = 'Please go to about:flags in Google Chrome and enable the &quot;MediaStream&quot; flag.';
-        },
-        drawToCanvas: function() {
-                requestAnimationFrame(App.drawToCanvas);
-                
-                var video = App.video,
-                        ctx = App.context,
-                        backCtx = App.backContext,
-                        m = 4,
-                        w = 4,
-                        i,
-                        comp;
-                
-                ctx.drawImage(video, 0, 0, App.canvas.width, App.canvas.height);
-                
-                backCtx.drawImage(video, 0, 0, App.backCanvas.width, App.backCanvas.height);
-                
-                comp = ccv.detect_objects(App.ccv = App.ccv || {
-                        canvas: App.backCanvas,
-                        cascade: cascade,
-                        interval: 4,
-                        min_neighbors: 1
-                });
-                
-                if (comp.length) {
-                        App.comp = comp;
-                }
-                
-                for (i = App.comp.length; i--; ) {
-                        ctx.drawImage(App.glasses, (App.comp[i].x - w / 2) * m, (App.comp[i].y - w / 2) * m, (App.comp[i].width + w) * m, (App.comp[i].height + w) * m);
-                }
-        }
-};
+  <body>
 
-App.glasses = new Image();
-App.glasses.src = 'glasses.png';
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/equinox123">View on GitHub</a>
 
-App.init = function() {
-        App.video = document.createElement('video');
-        App.backCanvas = document.createElement('canvas');
-        App.canvas = document.querySelector('#output');
-        App.canvas.style.display = 'none';
-        App.context = App.canvas.getContext('2d');
-        App.info = document.querySelector('#info');
-        
-        navigator.getUserMedia_ = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
-        
-        try {
-                navigator.getUserMedia_({
-                        video: true,
-                        audio: false
-                }, App.start, App.denied);
-        } catch (e) {
-                try {
-                        navigator.getUserMedia_('video', App.start, App.denied);
-                } catch (e) {
-                        App.error(e);
-                }
-        }
-        
-        App.video.loop = App.video.muted = true;
-        App.video.load();
-};
+          <h1 id="project_title">Equinox123.github.io</h1>
+          <h2 id="project_tagline"></h2>
 
-App.init();
+        </header>
+    </div>
 
-                </script>
-        </body>
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h3>
+<a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>Welcome to GitHub Pages.</h3>
+
+<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
+
+<pre><code>$ cd your_repo_root/repo_name
+$ git fetch origin
+$ git checkout gh-pages
+</code></pre>
+
+<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
+
+<h3>
+<a name="designer-templates" class="anchor" href="#designer-templates"><span class="octicon octicon-link"></span></a>Designer Templates</h3>
+
+<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
+
+<h3>
+<a name="rather-drive-stick" class="anchor" href="#rather-drive-stick"><span class="octicon octicon-link"></span></a>Rather Drive Stick?</h3>
+
+<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
+
+<h3>
+<a name="authors-and-contributors" class="anchor" href="#authors-and-contributors"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
+
+<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
+
+<h3>
+<a name="support-or-contact" class="anchor" href="#support-or-contact"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
+
+<p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
 </html>
